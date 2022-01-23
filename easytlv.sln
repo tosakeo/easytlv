@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyTLV", "easytlv\EasyTLV.csproj", "{2910700D-69D3-4C8D-950B-B888CADC22BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2910700D-69D3-4C8D-950B-B888CADC22BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2910700D-69D3-4C8D-950B-B888CADC22BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2910700D-69D3-4C8D-950B-B888CADC22BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2910700D-69D3-4C8D-950B-B888CADC22BD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE8F7A6D-6E3B-4044-A3FA-6DE955E10ECD}
+	EndGlobalSection
+EndGlobal
