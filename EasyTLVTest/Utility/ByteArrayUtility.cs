@@ -4,17 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EasyTLV.Extention
+namespace EasyTLVTest.Utility
 {
-    internal static class ByteArrayEx
+    internal static class ByteArrayUtility
     {
-        public static byte[] Copy(this byte[] source)
-        {
-            var result = new byte[source.Length];
-            source.CopyTo(result, 0);
-            return result;
-        }
 
+            
         public static string ToHexString(this byte[] source)
         {
             return BitConverter.ToString(source).Replace("-", "");

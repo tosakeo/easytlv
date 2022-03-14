@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyTLV", "easytlv\EasyTLV.csproj", "{2910700D-69D3-4C8D-950B-B888CADC22BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyTLV", "easytlv\EasyTLV.csproj", "{2910700D-69D3-4C8D-950B-B888CADC22BD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{01FBB763-F2DD-4BBE-8302-527B3A1EE8FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyTLVTest", "EasyTLVTest\EasyTLVTest.csproj", "{6EA2F1CA-FF52-4F1C-A384-464D45476A20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,16 @@ Global
 		{2910700D-69D3-4C8D-950B-B888CADC22BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2910700D-69D3-4C8D-950B-B888CADC22BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2910700D-69D3-4C8D-950B-B888CADC22BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EA2F1CA-FF52-4F1C-A384-464D45476A20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EA2F1CA-FF52-4F1C-A384-464D45476A20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EA2F1CA-FF52-4F1C-A384-464D45476A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EA2F1CA-FF52-4F1C-A384-464D45476A20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6EA2F1CA-FF52-4F1C-A384-464D45476A20} = {01FBB763-F2DD-4BBE-8302-527B3A1EE8FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CE8F7A6D-6E3B-4044-A3FA-6DE955E10ECD}

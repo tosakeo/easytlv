@@ -14,7 +14,7 @@ namespace EasyTLV
 
         public byte[] Value => value.Copy();
 
-        TLVTagValue(byte[] tag, byte[] value)
+        public TLVTagValue(byte[] tag, byte[] value)
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
             if (tag.Length == 0) throw new ArgumentException("Tag with zero length is not allowed.");
@@ -24,12 +24,21 @@ namespace EasyTLV
             this.value = value.Copy();
         }
 
+        public bool HasInnerTLV
+        {
+            get
+            {
+                const byte constractedFlag = 0b00100000;
+                return (tag[0] & constractedFlag) != constractedFlag;
+            }
+        }
+
         public TLV GetInnerTLV()
         {
-            if ()
-            {
+            if (!HasInnerTLV)
+                throw new InvalidOperationException("This is not a structured tag.");
 
-            }
+            return TLV.Create(value);
         }
 
 
