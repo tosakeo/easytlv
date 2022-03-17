@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using EasyTLV.Extention;
 
 namespace EasyTLV
@@ -82,49 +83,64 @@ namespace EasyTLV
 
         private static byte[] GetNextTag(byte[] tlvData, ref int position)
         {
-            var firstTagByte = tlvData[position++];
-
-            const byte seeSubsequentFlag = (byte)0b00011111;
-            if (!firstTagByte.HasFlag(seeSubsequentFlag))
+            try
             {
-                return new byte[] { firstTagByte };
+                var firstTagByte = tlvData[position++];
+
+                const byte seeSubsequentFlag = (byte)0b00011111;
+                if (!firstTagByte.HasFlag(seeSubsequentFlag))
+                {
+                    return new byte[] { firstTagByte };
+                }
+
+                var tagBytes = new List<byte>();
+                tagBytes.Add(firstTagByte);
+
+                byte nextTagByte;
+                do
+                {
+                    nextTagByte = tlvData[position++];
+                    tagBytes.Add(nextTagByte);
+                }
+                while (nextTagByte.HasFlag(0b10000000));
+
+                return tagBytes.ToArray();
             }
-
-            var tagBytes = new List<byte>();
-            tagBytes.Add(firstTagByte);
-
-            byte nextTagByte;
-            do
+            catch (IndexOutOfRangeException iex)
             {
-                nextTagByte = tlvData[position++];
-                tagBytes.Add(nextTagByte);
+                throw new ArgumentException("tlvData is invalid.", iex);
             }
-            while (nextTagByte.HasFlag(0b10000000));
-
-            return tagBytes.ToArray();
+            
         }
 
         private static int GetNextLength(byte[] tlvData, ref int position)
         {
-            var firstByte = tlvData[position++];
-            if (firstByte < 0x80)
+            try
             {
-                return firstByte;
-            }
+                var firstByte = tlvData[position++];
+                if (firstByte < 0x80)
+                {
+                    return firstByte;
+                }
 
-            int result = 0;
-            var lengthLength = firstByte - 0x80;
-            for (var i = 0; i < lengthLength; i++)
-            {
-                result = (result << 8) | tlvData[position++];
+                int result = 0;
+                var lengthLength = firstByte - 0x80;
+                for (var i = 0; i < lengthLength; i++)
+                {
+                    result = (result << 8) | tlvData[position++];
+                }
+                return result;
             }
-            return result;
+            catch (IndexOutOfRangeException iex)
+            {
+                throw new ArgumentException("tlvData is invalid.", iex);
+            }
         }
 
         public static byte[] GetValue(byte[] tlvData, int length, ref int position)
         {
             if (length > tlvData.Length - position)
-                throw new IndexOutOfRangeException("tlvData.Length is too short than length");
+                throw new ArgumentException("tlvData.Length is too short than length");
             var skipPosition = position;
             position = position + length;
             return tlvData.Skip(skipPosition).Take(length).ToArray();

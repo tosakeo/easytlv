@@ -109,7 +109,7 @@ namespace EasyTLVTest
 
 
         [TestMethod]
-        [ExpectedException(typeof(IndexOutOfRangeException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void create_invalid_length_at_value()
         {
             var source = "AA0201";
@@ -117,11 +117,27 @@ namespace EasyTLVTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IndexOutOfRangeException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void create_invalid_length_at_length()
         {
             var source = "AA";
             var tlv = TLV.Create(source);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void add_tag_hex_length_invalid()
+        {
+            var tlv = new TLV();
+            tlv.Add("A", "AA");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void add_value_hex_length_invalid()
+        {
+            var tlv = new TLV();
+            tlv.Add("AA", "A");
         }
 
     }
