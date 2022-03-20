@@ -11,7 +11,7 @@ namespace EasyTLV
     internal class TLVParser
     {
         private readonly byte[] _tlvData;
-        private int _position = 0;
+        private int _position;
 
         public TLVParser(byte[] tlvData)
         {
@@ -23,6 +23,8 @@ namespace EasyTLV
 
         public TLV Parse()
         {
+            _position = 0;
+
             var tlv = new TLV();
             while (_position < _tlvData.Length)
             {

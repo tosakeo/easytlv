@@ -22,6 +22,14 @@ namespace EasyTLV
 
             tagValues.Add(tag, new TLVTagValue(tag.HexToByteArray(), value));
         }
+        public void Add(string tag, TLV innerTLV)
+        {
+            var innerTLVValue = new TLVTagValue(tag.HexToByteArray(), innerTLV);
+            if (!innerTLVValue.HasInnerTLV)
+                throw new ArgumentException("tag is not a constracted tag.");
+
+            tagValues.Add(tag, innerTLVValue);
+        }
 
         public bool Contains(string tag)
         {
@@ -34,6 +42,11 @@ namespace EasyTLV
                 throw new KeyNotFoundException();
 
             return tagValues[tag].Value;
+        }
+
+        public bool HasInnerTLV(string tag)
+        {
+            return tagValues[tag].HasInnerTLV;
         }
 
         public TLV GetInnerTLV(string tag)
@@ -70,5 +83,6 @@ namespace EasyTLV
             var parser = new TLVParser(tlvData);
             return parser.Parse();
         }
+
     }
 }

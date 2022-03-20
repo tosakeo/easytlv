@@ -9,27 +9,46 @@ namespace EasyTLV
 {
     internal class TLVTagValue
     {
-        private readonly byte[] tag;
-        private readonly byte[] value;
+        private readonly byte[] _tag;
+        private readonly byte[] _value;
+        private readonly TLV _innerTLV;
 
-        public byte[] Value => value.Copy();
+        public byte[] Value => _value.Copy();
 
         public TLVTagValue(byte[] tag, byte[] value)
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
             if (tag.Length == 0) throw new ArgumentException("Tag with zero length is not allowed.");
+            
             if (value == null) throw new ArgumentNullException(nameof(value));
 
-            this.tag = tag.Copy();
-            this.value = value.Copy();
+            _tag = tag.Copy();
+            _value = value.Copy();
+
+            _innerTLV = IsConstractedTag(tag) ? TLV.Create(value) : new TLV();
+        }
+
+        public TLVTagValue(byte[] tag, TLV innerTLV) : this(tag)
+        {
+            if (innerTLV == null)
+                throw new ArgumentNullException(nameof(innerTLV));
+
+            _innerTLV = innerTLV;
+            _value = innerTLV.ToByteArray();
+        }
+
+        private TLVTagValue(byte[] tag)
+        {
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
+            if (tag.Length == 0) throw new ArgumentException("Tag with zero length is not allowed.");
+            _tag = tag.Copy();
         }
 
         public bool HasInnerTLV
         {
             get
             {
-                const byte constractedFlag = 0b00100000;
-                return (tag[0] & constractedFlag) != constractedFlag;
+                return IsConstractedTag(_tag);
             }
         }
 
@@ -38,14 +57,14 @@ namespace EasyTLV
             if (!HasInnerTLV)
                 throw new InvalidOperationException("This is not a structured tag.");
 
-            return TLV.Create(value);
+            return _innerTLV;
         }
 
 
         public byte[] ToByteArray()
         {
             return
-                tag.Copy()
+                _tag.Copy()
                 .Concat(GetTLVLength())
                 .Concat(Value)
                 .ToArray();
@@ -53,27 +72,32 @@ namespace EasyTLV
 
         private byte[] GetTLVLength()
         {
-            var length  = value.Length;
+            var length = _value.Length;
             if (length < 0x80)
             {
-                return new [] { (byte)length };
-            } 
-            else
-            {
-                var lengthLength = (length.ToString("X2").Length + 1) / 2;
-                var firstByte = (byte)(0x80 | lengthLength);
-                var result = new byte[lengthLength + 1];
-                result[0] = firstByte;
-                for(int i = 1; i <= lengthLength; i++)
-                {
-                    var shift = 8 * (lengthLength - i);
-                    result[i] = (byte)(length >> shift);
-                }
-
-                return result;
+                return new[] { (byte)length };
             }
+
+            var lengthLength = (length.ToString("X2").Length + 1) / 2;
+            var firstByte = (byte)(0x80 | lengthLength);
+            var result = new byte[lengthLength + 1];
+            result[0] = firstByte;
+            for (int i = 1; i <= lengthLength; i++)
+            {
+                var shift = 8 * (lengthLength - i);
+                result[i] = (byte)(length >> shift);
+            }
+
+            return result;
         }
 
+        private static bool IsConstractedTag(byte[] tag)
+        {
+            const byte constractedFlag = 0b00100000;
+            return tag[0].HasFlag(constractedFlag);
+        }
+
+        
 
 
 
