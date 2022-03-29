@@ -6,7 +6,7 @@ namespace EasyTLV
 {
     public class TLV
     {
-        private readonly Dictionary<string, TLVTagValue> tagValues = new();
+        private readonly Dictionary<TLVTag, TLVTagValue> tagValues = new();
 
         public void Add(string tag, string hexValue)
         {
@@ -20,7 +20,7 @@ namespace EasyTLV
             if (tag.Length % 2 != 0 || !tag.IsHex()) 
                 throw new ArgumentException("tag is invalid. tag needs hex.");
 
-            tagValues.Add(tag, new TLVTagValue(tag.HexToByteArray(), value));
+            tagValues.Add(new TLVTag(tag.HexToByteArray()), new TLVTagValue(tag.HexToByteArray(), value));
         }
 
         public void Add(string tag, TLV innerTLV)
@@ -29,12 +29,13 @@ namespace EasyTLV
             if (!innerTLVValue.HasInnerTLV)
                 throw new ArgumentException("tag is not a constracted tag.");
 
-            tagValues.Add(tag, innerTLVValue);
+            tagValues.Add(new TLVTag(tag.HexToByteArray()), innerTLVValue);
         }
 
         public bool Contains(string tag)
         {
-            return tagValues.ContainsKey(tag);
+            var tlvTag = new TLVTag(tag.HexToByteArray());
+            return tagValues.ContainsKey(tlvTag);
         }
 
         public byte[] Get(string tag)
@@ -42,17 +43,20 @@ namespace EasyTLV
             if (!Contains(tag))
                 throw new KeyNotFoundException();
 
-            return tagValues[tag].Value;
+            var tlvTag = new TLVTag(tag.HexToByteArray());
+            return tagValues[tlvTag].Value;
         }
 
         public bool HasInnerTLV(string tag)
         {
-            return tagValues[tag].HasInnerTLV;
+            var tlvTag = new TLVTag(tag.HexToByteArray());
+            return tlvTag.IsConstructedTag;
         }
 
         public TLV GetInnerTLV(string tag)
         {
-            return tagValues[tag].GetInnerTLV();
+            var tlvTag = new TLVTag(tag.HexToByteArray());
+            return tagValues[tlvTag].GetInnerTLV();
         }
 
         public byte[] ToByteArray()
