@@ -22,6 +22,7 @@ namespace EasyTLV
 
             tagValues.Add(tag, new TLVTagValue(tag.HexToByteArray(), value));
         }
+
         public void Add(string tag, TLV innerTLV)
         {
             var innerTLVValue = new TLVTagValue(tag.HexToByteArray(), innerTLV);

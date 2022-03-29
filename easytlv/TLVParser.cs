@@ -38,34 +38,10 @@ namespace EasyTLV
 
         private byte[] GetNextTag()
         {
-            try
-            {
-                var firstTagByte = _tlvData[_position++];
+            var tagBytes = TLVTag.GetTagFromBytes(_tlvData, _position);
+            _position += tagBytes.Length;
 
-                const byte seeSubsequentFlag = (byte)0b00011111;
-                if (!firstTagByte.HasFlag(seeSubsequentFlag))
-                {
-                    return new byte[] { firstTagByte };
-                }
-
-                var tagBytes = new List<byte>();
-                tagBytes.Add(firstTagByte);
-
-                byte nextTagByte;
-                do
-                {
-                    nextTagByte = _tlvData[_position++];
-                    tagBytes.Add(nextTagByte);
-                }
-                while (nextTagByte.HasFlag(0b10000000));
-
-                return tagBytes.ToArray();
-            }
-            catch (IndexOutOfRangeException iex)
-            {
-                throw new ArgumentException("tlvData is invalid.", iex);
-            }
-
+            return tagBytes;
         }
 
         private int GetNextLength()
